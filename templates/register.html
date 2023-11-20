@@ -1,0 +1,78 @@
+<!-- register_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+</head>
+<body>
+    <h2>Registration</h2>
+    <form id="registerForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required><br>
+
+        <!-- Добавляем элемент для вывода сообщения об ошибке -->
+        <div id="error-message" style="color: red;"></div>
+
+        <!-- Используем JavaScript для отправки POST-запроса при событии submit формы -->
+        <button type="button" onclick="submitForm()">Register</button>
+    </form>
+
+    <script>
+        function submitForm() {
+            // Получаем значения полей из формы
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+
+            // Проверяем, что пароль и подтверждение пароля совпадают
+            if (password !== confirmPassword) {
+                document.getElementById("error-message").innerText = "Passwords do not match";
+                return;
+            }
+
+            var data = {
+                username: username,
+                password: password
+            };
+
+            // Создаем Fetch API запрос
+            fetch('/OpenChat/register/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                console.log('Status:', response.status);
+
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response:', data);
+
+                // Переходим на страницу чата после успешной регистрации
+                window.location.href = "/OpenChat/login";
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+                document.getElementById("error-message").innerText = "Registration failed";
+            });
+        }
+    </script>
+</body>
+</html>

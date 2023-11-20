@@ -1,17 +1,26 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
-from starlette.responses import RedirectResponse
+from starlette.responses import JSONResponse
 
 from db import crud
+from schemas.schemas import Login
 from utils.utils import verify_pass, create_access_token, hash_password_sha256
 
 
-def register(username: str, password: str, db: Session):
+def register(form_data: Login, db: Session):
+    username = form_data.username
+    password = form_data.password
+
     hashed_password = hash_password_sha256(password)
     new_user = crud.create_user(db, username, hashed_password)
+
     access_token = create_access_token(data={"sub": new_user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+    response = JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
+    response.set_cookie(key="access_token", value=access_token)
+
+    return response
+
 
 
 def login(username: str, password: str, db: Session):
@@ -21,7 +30,7 @@ def login(username: str, password: str, db: Session):
 
     access_token = create_access_token(data={"sub": user.username})
 
-    response = RedirectResponse(url="/OpenChat/chat", status_code=status.HTTP_302_FOUND)
-    response.set_cookie(key="access_token", value=access_token)
+    return JSONResponse(
+        content={"access_token": access_token, "username": user.username, "redirect_url": "/OpenChat/chat"})
 
-    return response
+

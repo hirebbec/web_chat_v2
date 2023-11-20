@@ -5,4 +5,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="PackageRequirementsSettings">
+    <option name="requirementsPath" value="C:\Users\reek8\AppData\Local\Programs\Python\Python312\Scripts\poetry.exe" />
+  </component>
 </module>
