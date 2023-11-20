@@ -1,9 +1,8 @@
 import hashlib
 from datetime import datetime, timedelta
-from urllib import request
 
-from jose import JWTError, jwt
 from fastapi import Request
+from jose import JWTError, jwt
 
 SECRET_KEY = "Hello world!"
 ALGORITHM = "HS256"
@@ -11,12 +10,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 def hash_password_sha256(password: str):
-    password_bytes = password.encode('utf-8')
+    password_bytes = password.encode("utf-8")
     hashed_password = hashlib.sha256(password_bytes).hexdigest()
     return hashed_password
 
 
-def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -33,9 +32,11 @@ def verify_pass(password: str, hashed_password: str) -> bool:
 
 def get_current_user(r: Request):
     token = r.cookies.get("access_token")
+    if not token:
+        return None
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
+        username = payload.get("sub")
         if username is None:
             return None
     except JWTError:

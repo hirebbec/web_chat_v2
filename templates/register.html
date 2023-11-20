@@ -18,10 +18,8 @@
         <label for="confirmPassword">Confirm Password:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" required><br>
 
-        <!-- Добавляем элемент для вывода сообщения об ошибке -->
         <div id="error-message" style="color: red;"></div>
 
-        <!-- Используем JavaScript для отправки POST-запроса при событии submit формы -->
         <button type="button" onclick="submitForm()">Register</button>
     </form>
 
@@ -32,7 +30,6 @@
             var password = document.getElementById("password").value;
             var confirmPassword = document.getElementById("confirmPassword").value;
 
-            // Проверяем, что пароль и подтверждение пароля совпадают
             if (password !== confirmPassword) {
                 document.getElementById("error-message").innerText = "Passwords do not match";
                 return;
@@ -43,7 +40,6 @@
                 password: password
             };
 
-            // Создаем Fetch API запрос
             fetch('/OpenChat/register/', {
                 method: 'POST',
                 headers: {
@@ -65,7 +61,6 @@
             .then(data => {
                 console.log('Response:', data);
 
-                // Переходим на страницу чата после успешной регистрации
                 window.location.href = "/OpenChat/login";
             })
             .catch(error => {

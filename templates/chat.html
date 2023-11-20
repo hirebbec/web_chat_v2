@@ -1,9 +1,42 @@
-<html>
-    <head>
-        <title>OpenChat</title>
-    </head>
-    <body>
-        <h1>Это чат!</h1>
-        <p>Logged in as: {{ current_user }}</p>
-    </body>
+<!-- templates/chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Page</title>
+</head>
+<body>
+    <h1>Chat Room</h1>
+    <p>Logged in as: {{ current_user }}</p>
+
+    <div id="chat-box"></div>
+
+    <input type="text" id="message-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:8000/OpenChat/ws/chat");
+
+        const chatBox = document.getElementById("chat-box");
+        const messageInput = document.getElementById("message-input");
+
+        socket.onmessage = event => {
+            const message = document.createElement("p");
+            message.textContent = event.data;
+            chatBox.appendChild(message);
+        };
+
+        function sendMessage() {
+            const message = messageInput.value;
+
+            if (message) {
+                socket.send(`${current_user}: ${message}`);
+                messageInput.value = "";
+            } else {
+                alert("Please enter a message before sending.");
+            }
+        }
+    </script>
+</body>
 </html>
