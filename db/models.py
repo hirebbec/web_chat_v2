@@ -1,26 +1,27 @@
 from datetime import datetime
+from typing import Type
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+Base: Type = declarative_base()
 
 
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = Column(Integer, primary_key=True, index=True)
-    username: Mapped[str] = Column(String, unique=True, index=True)
-    email: Mapped[str] = Column(String, unique=True, index=True)
-    hashed_password: Mapped[str] = Column(String)
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
 
 
 class Message(Base):
     __tablename__ = "messages"
 
-    id: Mapped[int] = Column(Integer, primary_key=True, index=True)
-    content: Mapped[str] = Column(String)
-    timestamp: Mapped[datetime] = Column(DateTime, default=datetime.utcnow)
-    sender_id: Mapped[int] = Column(Integer, ForeignKey("users.id"))
-    sender: Mapped[User] = relationship("User", foreign_keys=[sender_id])
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(String)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    sender_id = Column(Integer, ForeignKey("users.id"))
+    sender = relationship("User", foreign_keys=[sender_id])
