@@ -24,4 +24,3 @@ class Message(Base):
     content = Column(String)
     timestamp = Column(DateTime, default=datetime.utcnow)
     sender_id = Column(Integer, ForeignKey("users.id"))
-    sender = relationship("User", foreign_keys=[sender_id])
