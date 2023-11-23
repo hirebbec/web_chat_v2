@@ -20,3 +20,7 @@ class Message(BaseModel):
 class Login(BaseModel):
     username: str
     password: str
+
+class CreateMessage(BaseModel):
+    content: str
+    sender_id: int
