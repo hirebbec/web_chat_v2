@@ -1,26 +1,23 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from service.message_service import MessageService
 
-from db.db import get_db
-from schemas.schemas import Message
-from service import message_service
 
 message_router = APIRouter(prefix="/message", tags=["messages"])
 
 
 @message_router.get("/")
 async def get_all_messages(service: MessageService = Depends()):
-    return message_service.get_all(db)
+    return service.get_all()
 
 
 @message_router.post("/")
-async def create_message(content: str, sender_id: int, db: Session = Depends(get_db)):
-    return message_service.create(content, sender_id, db)
+async def create_message(content: str, sender_id: int, service: MessageService = Depends()):
+    return service.create(content, sender_id)
 
 
 @message_router.get("/{id}")
-async def get_message_by_id(id: int, db: Session = Depends(get_db)):
-    return message_service.get(id, db)
+async def get_message_by_id(id: int, service: MessageService = Depends()):
+    return service.get(id)
 
 
 @message_router.get('/{user_id}')
