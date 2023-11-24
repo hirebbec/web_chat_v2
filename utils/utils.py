@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from fastapi import Request
 from jose import JWTError, jwt
+from sqlalchemy import Column
 
 SECRET_KEY = "Hello world!"
 ALGORITHM = "HS256"
@@ -26,7 +27,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     return encoded_jwt
 
 
-def verify_pass(password: str, hashed_password: str) -> bool:
+def verify_pass(password: str, hashed_password: Column[str]) -> bool:
     return hash_password_sha256(password) == hashed_password
 
 
@@ -36,13 +37,10 @@ def get_current_user(r: Request):
         return None
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
+        username = payload.get("username")
+        id = payload.get("id")
         if username is None:
             return None
     except JWTError:
         return None
-    return username
-
-
-
-
+    return {"username": username, "id": id}

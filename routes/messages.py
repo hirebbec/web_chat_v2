@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
-from service.message_service import MessageService
 
+from schemas.schemas import CreateMessage
+from service.message_service import MessageService
 
 message_router = APIRouter(prefix="/message", tags=["messages"])
 
@@ -11,8 +12,8 @@ async def get_all_messages(service: MessageService = Depends()):
 
 
 @message_router.post("/")
-async def create_message(content: str, sender_id: int, service: MessageService = Depends()):
-    return service.create(content, sender_id)
+async def create_message(message: CreateMessage, service: MessageService = Depends()):
+    return service.create(message)
 
 
 @message_router.get("/{id}")
@@ -20,6 +21,6 @@ async def get_message_by_id(id: int, service: MessageService = Depends()):
     return service.get(id)
 
 
-@message_router.get('/{user_id}')
-async def get_user_messages(user_id: int):
-    pass
+@message_router.delete("/{id}")
+async def delete_message(id: int, service: MessageService = Depends()):
+    return service.delete(id)
