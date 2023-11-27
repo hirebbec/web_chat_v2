@@ -19,8 +19,3 @@ async def login_route(
     form_data: CreateUser, service: AuthorizationService = Depends()
 ) -> JSONResponse:
     return service.login(form_data)
-
-
-@authorization_router.post("/chat/", tags=["authorization"])
-async def chat():
-    pass

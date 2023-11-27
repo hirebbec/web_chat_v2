@@ -13,7 +13,11 @@ class MessageRepository:
         self._session = session
 
     def create_message(self, message: CreateMessage) -> Message:
-        new_message = Message(content=message.content, sender_id=message.sender_id)
+        new_message = Message(
+            content=message.content,
+            sender_id=message.sender_id,
+            sender_name=message.sender_name,
+        )
         self._session.add(new_message)
         self._session.commit()
         self._session.refresh(new_message)

@@ -177,7 +177,8 @@
                         },
                         body: JSON.stringify({
                             content: content,
-                            sender_id: {{id}}
+                            sender_id: {{id}},
+                            sender_name: '{{username}}'
                         })
                     });
 
@@ -241,11 +242,12 @@
                     timestampElement.textContent = new Date(message.timestamp).toLocaleTimeString();
 
                     const senderElement = document.createElement("span");
-                    senderElement.textContent = `ID: ${message.sender_id}`;
+                    senderElement.textContent = `${message.sender_name}`;
 
                     // Append elements to the container
-                    messageDetails.appendChild(timestampElement);
                     messageDetails.appendChild(senderElement);
+                    messageDetails.appendChild(timestampElement);
+
 
                     messageContainer.appendChild(messageContent);
                     messageContainer.appendChild(messageDetails);

@@ -21,11 +21,13 @@ class GetMessage(BaseModel):
     content: str
     timestamp: datetime
     sender_id: int
+    sender_name: str
 
 
 class CreateMessage(BaseModel):
     content: str
     sender_id: int
+    sender_name: str
 
 
 class GetMessages(BaseModel):
