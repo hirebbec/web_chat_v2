@@ -3,9 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login Page - OpenChat</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #000000;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #232323;
+            color: #FFFFFF;
+        }
+
+        #error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #000000;
+            color: #FFFFFF;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            background-color: #232323;
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>OpenChat</h1>
+        <a href="/OpenChat/register">Sign Up</a>
+    </header>
+
     <h2>Login</h2>
     <form id="loginForm">
         <label for="username">Username:</label>
@@ -15,56 +93,52 @@
         <input type="password" id="password" name="password" required><br>
 
         <!-- Добавляем элемент для вывода сообщения об ошибке -->
-        <div id="error-message" style="color: red;"></div>
+        <div id="error-message"></div>
 
         <!-- Используем JavaScript для отправки POST-запроса при событии submit формы -->
-        <button type="button" onclick="submitForm()" style="margin-top:10px">Submit</button>
-        <button type="button" onclick="redirectToRegistrationPage()">Sign up</button>
+        <button type="button" onclick="submitForm()" style="margin-top:10px">Login</button>
     </form>
-        <script>
-            function redirectToRegistrationPage() {
-                    window.location.href = "/OpenChat/register";
-            }
 
-            function submitForm() {
-                var username = document.getElementById("username").value;
-                var password = document.getElementById("password").value;
+    <script>
+        function submitForm() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
 
-                var data = {
-                    username: username,
-                    password: password
-                };
+            var data = {
+                username: username,
+                password: password
+            };
 
-                fetch('/OpenChat/login/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => {
-                    console.log('Status:', response.status);
+            fetch('/OpenChat/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                console.log('Status:', response.status);
 
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            throw new Error(text);
-                        });
-                    }
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
 
-                    return response.json();
-                })
-                .then(data => {
-                    // Установка куки с токеном
-                    document.cookie = `access_token=${data.access_token}; path=/;`;
+                return response.json();
+            })
+            .then(data => {
+                // Установка куки с токеном
+                document.cookie = `access_token=${data.access_token}; path=/;`;
 
-                    // Перенаправление на страницу чата
-                    window.location.href = "/OpenChat/chat";
-                })
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                    document.getElementById("error-message").innerText = "Invalid username or password";
-                });
-            }
-        </script>
+                // Перенаправление на страницу чата
+                window.location.href = "/OpenChat/chat";
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+                document.getElementById("error-message").innerText = "Invalid username or password";
+            });
+        }
+    </script>
 </body>
 </html>
