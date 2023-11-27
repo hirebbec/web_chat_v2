@@ -1,52 +1,171 @@
-<!-- templates/chat.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Страница чата</title>
+    <title>Chat Page - OpenChat</title>
+    <style>
+        ::-webkit-scrollbar {
+            width: 0.5em;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #888;
+        }
+
+        body {
+            background-color: #121212;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #000000;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info p {
+            margin: 0;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .user-info p,
+        header a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 7px;
+            border: solid 2px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .chat-container {
+            padding-right: 0.5em;
+            padding: 10px;
+            border-radius: 30px;
+            width: 80%;
+            margin: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
+            white-space: normal;
+        }
+
+        #chat-box {
+            height: 100%;
+        }
+
+        #message-form {
+            border-radius: 15px;
+        }
+
+        .chat-window {
+            border: 1px solid #FFFFFF;
+            border-radius: 15px;
+            padding: 10px;
+            white-space: normal;
+            max-height: calc(70vh - 80px); /* Максимальная высота чата, учитывая отступ вниз */
+            overflow-y: auto; /* Добавить вертикальную прокрутку внутри .chat-window */
+            display: flex;
+            flex-direction: column;
+        }
+
+        form {
+            width: 80%; /* Новое: форма теперь занимает 80% ширины */
+            margin: 10px auto;
+        }
+
+        label {
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 22px); /* Новое: учитываем padding и border */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #232323;
+            color: #FFFFFF;
+            display: inline-block; /* Новое: инпут влезет в строку с кнопкой */
+        }
+
+        input[type="submit"] {
+            width: 20%; /* Новое: кнопка занимает 20% ширины */
+            background-color: #000000;
+            color: #FFFFFF;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block; /* Новое: кнопка влезет в строку с инпутом */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #232323;
+        }
+
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Сообщение выравнивается слева */
+            margin-bottom: 10px;
+        }
+
+        .message-content {
+            background-color: #3f3f3f;
+            border-radius: 10px;
+            padding: 10px;
+            color: #ffffff;
+            margin-bottom: 5px;
+            max-width: 60%; /* Ограничиваем ширину текста сообщения */
+        }
+
+        .message-details {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
-    <h1>Чат</h1>
-    <p>Вошли как: {{username}}</p>
+    <header>
+        <h1>OpenChat</h1>
+        <div class="user-info">
+            <p style="margin-right: 10px;">Logged as: {{username}}</p>
+            <a href="/OpenChat/login">Logout</a>
+        </div>
+    </header>
 
-    <div id="chat-box"></div>
+    <div class="chat-container">
+        <div class="chat-window" id="chat-box"></div>
+    </div>
 
     <form id="message-form">
-        <label for="content">Сообщение:</label>
-        <input type="text" id="content" name="content" required>
-        <input type="submit" value="Отправить">
+        <input type="text" id="content" name="content" required autocomplete="off" style="border-radius:10px">
+        <input type="submit" value="Send">
     </form>
-
-    <button onclick="LogOut()">Log out</button>
-
     <script>
-        function LogOut() {
-            window.location.href = "/OpenChat/login"
-        }
-
-        async function fetchMessages() {
-            try {
-                const response = await fetch('/OpenChat/message');
-                const messages = await response.json();
-
-                const chatBox = document.getElementById("chat-box");
-                chatBox.innerHTML = "";  // Очистить предыдущие сообщения
-
-                messages.forEach(message => {
-                    const messageElement = document.createElement("p");
-                    const timestamp = new Date(message.timestamp).toLocaleString();
-                    messageElement.textContent = `${timestamp} - ${message.content} (ID: ${message.id}, Sender ID: ${message.sender_id})`;
-                    chatBox.appendChild(messageElement);
-                });
-            } catch (error) {
-                console.error('Ошибка при получении сообщений:', error);
-            }
-        }
-
         async function sendMessage(event) {
             event.preventDefault();
-
             const content = document.getElementById("content").value;
 
             if (content) {
@@ -58,30 +177,101 @@
                         },
                         body: JSON.stringify({
                             content: content,
-                            sender_id: {{id}}
+                            sender_id: {{id}},
+                            sender_name: '{{username}}'
                         })
                     });
 
-                    // После отправки сообщения обновим чат
+                    // After sending the message, update the chat
                     fetchMessages();
 
-                    // Очистим поле ввода
+                    // Clear the input field
                     document.getElementById("content").value = "";
+
+                    // Scroll down to show the latest message
+                    scrollChatToBottom();
                 } catch (error) {
-                    console.error('Ошибка при отправке сообщения:', error);
+                    console.error('Error sending message:', error);
                 }
             } else {
-                alert("Введите сообщение перед отправкой.");
+                alert("Enter a message before sending.");
             }
         }
 
-        // Получаем сообщения при загрузке страницы
+        function scrollChatToBottom() {
+            const chatBox = document.getElementById("chat-box");
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function LogOut() {
+            window.location.href = "/OpenChat/login";
+        }
+
+        window.onload = function () {
+            scrollChatToBottom();
+        };
+
+        async function fetchMessages() {
+            try {
+                const response = await fetch('/OpenChat/message');
+                const messages = await response.json();
+
+                const chatBox = document.getElementById("chat-box");
+
+                // Store the current scroll position
+                const isScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 1;
+
+                // Clear previous messages
+                chatBox.innerHTML = "";
+
+                messages.forEach(message => {
+                    // Create message container
+                    const messageContainer = document.createElement("div");
+                    messageContainer.classList.add("message-container");
+
+                    // Create message element
+                    const messageContent = document.createElement("div");
+                    messageContent.classList.add("message-content");
+                    messageContent.textContent = message.content;
+
+                    // Create timestamp and sender elements
+                    const messageDetails = document.createElement("div");
+                    messageDetails.classList.add("message-details");
+
+                    const timestampElement = document.createElement("span");
+                    timestampElement.textContent = new Date(message.timestamp).toLocaleTimeString();
+
+                    const senderElement = document.createElement("span");
+                    senderElement.textContent = `${message.sender_name}`;
+
+                    // Append elements to the container
+                    messageDetails.appendChild(senderElement);
+                    messageDetails.appendChild(timestampElement);
+
+
+                    messageContainer.appendChild(messageContent);
+                    messageContainer.appendChild(messageDetails);
+
+                    // Append the container to the chat box
+                    chatBox.appendChild(messageContainer);
+                });
+
+                // Scroll to the bottom only if the user was already at the bottom
+                if (isScrolledToBottom) {
+                    scrollChatToBottom();
+                }
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        }
+
+        // Get messages on page load
         fetchMessages();
 
-        // Устанавливаем таймер для периодического обновления сообщений
-        setInterval(fetchMessages, 5000);  // Обновлять каждые 5 секунд
+        // Set a timer for periodic message updates
+        setInterval(fetchMessages, 500);  // Update every 5 seconds
 
-        // Обрабатываем отправку формы
+        // Handle form submission
         document.getElementById("message-form").addEventListener("submit", sendMessage);
     </script>
 </body>

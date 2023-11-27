@@ -23,3 +23,4 @@ class Message(Base):
     content = Column(String)
     timestamp = Column(DateTime, default=datetime.utcnow)
     sender_id = Column(Integer, ForeignKey("users.id"))
+    sender_name = Column(String)
