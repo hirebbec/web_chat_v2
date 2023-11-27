@@ -1,13 +1,10 @@
-from typing import List
-
 import uvicorn
 from fastapi import FastAPI
 
-from routes.routes import api_router
+from routes.routes import router
 
 app = FastAPI()
-
-app.include_router(api_router)
+app.include_router(router)
 
 if __name__ == "__main__":
     uvicorn.run(app)

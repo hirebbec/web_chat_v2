@@ -18,9 +18,14 @@
         <div id="error-message" style="color: red;"></div>
 
         <!-- Используем JavaScript для отправки POST-запроса при событии submit формы -->
-        <button type="button" onclick="submitForm()">Submit</button>
+        <button type="button" onclick="submitForm()" style="margin-top:10px">Submit</button>
+        <button type="button" onclick="redirectToRegistrationPage()">Sign up</button>
     </form>
         <script>
+            function redirectToRegistrationPage() {
+                    window.location.href = "/OpenChat/register";
+            }
+
             function submitForm() {
                 var username = document.getElementById("username").value;
                 var password = document.getElementById("password").value;

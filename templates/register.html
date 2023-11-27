@@ -21,9 +21,14 @@
         <div id="error-message" style="color: red;"></div>
 
         <button type="button" onclick="submitForm()">Register</button>
+        <button type="button" onclick="redirectToLoginPage()">Sign in</button>
     </form>
 
     <script>
+        function redirectToLoginPage() {
+                window.location.href = "/OpenChat/login";
+        }
+
         function submitForm() {
             // Получаем значения полей из формы
             var username = document.getElementById("username").value;
@@ -59,9 +64,7 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Response:', data);
-
-                window.location.href = "/OpenChat/login";
+                window.location.href = "/OpenChat/chat";
             })
             .catch(error => {
                 console.error('There has been a problem with your fetch operation:', error);
