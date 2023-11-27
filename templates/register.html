@@ -21,9 +21,14 @@
         <div id="error-message" style="color: red;"></div>
 
         <button type="button" onclick="submitForm()">Register</button>
+        <button type="button" onclick="redirectToLoginPage()">Sign in</button>
     </form>
 
     <script>
+        function redirectToLoginPage() {
+                window.location.href = "/OpenChat/login";
+        }
+
         function submitForm() {
             // Получаем значения полей из формы
             var username = document.getElementById("username").value;

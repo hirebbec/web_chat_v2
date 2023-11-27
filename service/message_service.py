@@ -1,4 +1,4 @@
-from typing import Type
+from typing import List
 
 from fastapi import Depends
 
@@ -17,7 +17,7 @@ class MessageService:
     def get(self, id: int):
         return self._message_repository.get_message(id)
 
-    def get_all(self) -> list[Message]:
+    def get_all(self) -> List[Message]:
         return self._message_repository.get_all_messages()
 
     def delete(self, id: int):

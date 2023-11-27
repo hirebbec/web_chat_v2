@@ -1,4 +1,4 @@
-from typing import Type
+from typing import List
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -22,7 +22,7 @@ class MessageRepository:
     def get_message(self, id: int) -> Message | None:
         return self._session.query(Message).filter(Message.id == id).first()
 
-    def get_all_messages(self) -> list[Message]:
+    def get_all_messages(self) -> List[Message]:
         return self._session.query(Message).all()
 
     def delete(self, id: int) -> None:

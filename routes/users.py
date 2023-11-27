@@ -1,8 +1,6 @@
-from typing import List, Type
 
 from fastapi import APIRouter, Depends
 
-from db.models import User
 from schemas.schemas import CreateUser
 from service.users_service import UserService
 
@@ -10,7 +8,7 @@ users_router = APIRouter(prefix="/users", tags=["users"])
 
 
 @users_router.get("/")
-async def get_all_users(service: UserService = Depends()) -> List[User]:
+async def get_all_users(service: UserService = Depends()):
     return service.get_all()
 
 

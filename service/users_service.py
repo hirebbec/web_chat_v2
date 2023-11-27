@@ -19,7 +19,7 @@ class UserService:
     def get(self, id: int) -> User | None:
         return self._users_repository.get_user(id)
 
-    def get_all(self) -> list[User]:
+    def get_all(self) -> List[User]:
         return self._users_repository.get_all_users()
 
     def delete(self, id: int) -> None:

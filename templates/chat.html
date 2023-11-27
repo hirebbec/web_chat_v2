@@ -18,7 +18,13 @@
         <input type="submit" value="Отправить">
     </form>
 
+    <button onclick="LogOut()">Log out</button>
+
     <script>
+        function LogOut() {
+            window.location.href = "/OpenChat/login"
+        }
+
         async function fetchMessages() {
             try {
                 const response = await fetch('/OpenChat/message');

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from starlette.requests import Request
-from starlette.responses import HTMLResponse, RedirectResponse, Response
+from starlette.responses import RedirectResponse, Response
 from starlette.templating import Jinja2Templates
 
 from utils.utils import get_current_user
